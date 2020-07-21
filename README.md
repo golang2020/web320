@@ -4,7 +4,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 # Goal for this project
 Develop an API for web data visulization
-MVC design
+
+
+Following MVC design pattern:
+
 View3D -- Create 3d scene
+
 World3D -- Holds data model (Object3D), and will be added into scene
+
 Controller -- Manipulates the scene
