@@ -182,9 +182,6 @@ export class SpinningCubeComponent implements OnInit {
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
  
-    const someShaderPass = new ShaderPass(RGBShiftShader);
-    this.composer.addPass(someShaderPass);
- 
     //draw to the screen
     const copyPass = new ShaderPass(CopyShader)
     copyPass.renderToScreen = true
