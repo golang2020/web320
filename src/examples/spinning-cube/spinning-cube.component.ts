@@ -3,6 +3,8 @@ import * as dat from 'dat.gui';
 import * as THREE from 'three';
 import { Vector3 } from 'three';
 import OrbitControls from 'orbit-controls-es6';
+import EffectComposer, { RenderPass, ShaderPass, CopyShader, RGBShiftShader } from 'three-effectcomposer-es6';
+
 import { error } from '@angular/compiler/src/util';
 
 @Component({
@@ -27,7 +29,8 @@ export class SpinningCubeComponent implements OnInit {
   private farPlane: number = 1000;
   private fieldView: number = 45;
   private moveZDir: boolean = true;
-
+  private composer: EffectComposer;
+  //construtor
   constructor(private element: ElementRef, private ngRenderer: Renderer2) { 
 
   }
@@ -140,16 +143,52 @@ export class SpinningCubeComponent implements OnInit {
       color: 0x0000ff,
       side: THREE.DoubleSide
     });
-    let texture = new THREE.TextureLoader().load( '/assets/textures/0.jpg' );
-    if (texture != undefined) {
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      texture.repeat.set(1.0,1.0);
-      planeMaterial.map = texture;
+    planeMaterial.map = new THREE.TextureLoader().load( '/assets/textures/0.jpg' );
+    //bumpMap for lighting to uneven topology
+    planeMaterial.bumpMap = new THREE.TextureLoader().load( '/assets/textures/0.jpg' );
+    //planeMaterial.roughnessMap; variation of reflection
+    //planeMaterial.envMap, scene.bankground, CubeTextureLoader
+    if (planeMaterial.map != null) {
+      let maps = ['map', 'bumpMap'];
+      maps.forEach(function(mapName){
+        let texture = planeMaterial[mapName];
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(1.0,1.0);
+      });
     }
-    
     plane.rotateX(Math.PI/2);
     group.add(new THREE.Mesh( plane, planeMaterial));
+
+    //add particals
+    let particalGeometry = new THREE.Geometry();
+    let particalMaterical = new THREE.PointsMaterial({
+      color: 'rgb(100, 100, 0)',
+      size: 1,
+      transparent: false,
+      depthWrite: false
+    });
+    let particalCount = 50;
+    let particalDistance = 20;
+    for (let i=0; i<particalCount; i++) {
+      let posX = ( Math.random() - 0.5 ) * particalDistance;
+      let posY = ( Math.random() - 0.5 ) * particalDistance;
+      let posZ = ( Math.random() - 0.5 ) * particalDistance;
+      particalGeometry.vertices.push(new THREE.Vector3(posX, posY, posZ));
+    }
+    group.add(new THREE.Points(particalGeometry, particalMaterical));
+
+    //add shader
+    this.composer = new EffectComposer(this.renderer);
+    this.composer.addPass(new RenderPass(this.scene, this.camera));
+ 
+    const someShaderPass = new ShaderPass(RGBShiftShader);
+    this.composer.addPass(someShaderPass);
+ 
+    //draw to the screen
+    const copyPass = new ShaderPass(CopyShader)
+    copyPass.renderToScreen = true
+    this.composer.addPass(copyPass)
   }
 
   initScene() {
