@@ -1,8 +1,9 @@
 /* Style the sidenav */
 .sidenav {
-    height: 150px;
-    width: 75%;
-    display: flex;
+    height: 100%;
+    width: 125px;
+    display: grid;
+    grid-template-rows: repeat(12, 1fr);
     position: fixed;
     z-index: 1;
     top: 0;
@@ -12,23 +13,24 @@
     padding-top: 20px;
   }
 
-  /* Style the sidenav links and the dropdown button */
-  .sidenav a, .dropdown-btn {
-    padding: 6px 8px 6px 16px;
+/* Style the sidenav links and the dropdown button */
+.sidenav a, .dropdown-btn {
     text-decoration: none;
     font-size: 20px;
     color: #818181;
-    display: block;
+    display: grid;
+    grid-column: 1 / 1;
     border: none;
     background: none;
-    width:100%;
-    text-align: left;
+    height:100%;
+    text-align: center;
     cursor: pointer;
     outline: none;
+    padding-top: 10px;
   }
   
-  /* On mouse-over */
-  .sidenav a:hover, .dropdown-btn:hover {
+/* On mouse-over */
+.sidenav a:hover, .dropdown-btn:hover {
     color: #f1f1f1;
   }
 
