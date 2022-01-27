@@ -22,7 +22,7 @@
     "dat.gui": "^0.7.7",
     "orbit-controls-es6": "^2.0.1",
     "rxjs": "~6.5.5",
-    "three": "^0.108.0",
+    "three": "^0.137.0",
     "three-effectcomposer-es6": "0.0.4",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
